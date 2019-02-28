@@ -1,0 +1,6 @@
+.idea/
+.idea/*
+bite_venv/
+bite_venv/*
+classes/__pycache__/
+classes/__pycache__/*
