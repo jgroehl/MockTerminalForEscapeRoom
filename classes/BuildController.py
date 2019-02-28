@@ -19,7 +19,49 @@ class BuildController(BaseController):
             app.set_login_controller()
             return
 
+        text_args = text.split(" ")
+
+        if text_args[0] == "bite":
+            if len(text_args) > 1 and text_args[1] == "build":
+                if self.check_arguments(text_args):
+                    app.show_end_screen()
+                    return
+                else:
+                    app.add_label(text="Your use of the bite command did not achieve your goal :(",
+                                  column=1,
+                                  sticky="W",
+                                  removable=True,
+                                  color=self.CONTROLLER_COLOR,
+                                  increment=True)
+                    return
+            else:
+                self.print_bite_help(app)
+                return
+
         super().parse_text(app)
+
+    def check_arguments(self, args):
+        return False
+
+    def print_bite_help(self, app):
+        app.add_label(text="  bite command reference:",
+                      column=1,
+                      sticky="W",
+                      removable=True,
+                      color=self.CONTROLLER_COLOR,
+                      increment=True)
+        app.add_label(text="     bite:\tto compile use 'bite build' with corresponding arguments:",
+                      column=1,
+                      sticky="W",
+                      removable=True,
+                      color=self.CONTROLLER_COLOR,
+                      increment=True)
+        app.add_label(text="     arguments:\tplease refer to the bite build manual for the arguments.",
+                      column=1,
+                      sticky="W",
+                      removable=True,
+                      color=self.CONTROLLER_COLOR,
+                      increment=True)
 
     def print_help(self, app):
         app.add_label(text=self.CONTROLLER_PREFIX + "Core commands list:",
