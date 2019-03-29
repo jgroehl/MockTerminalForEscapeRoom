@@ -7,9 +7,10 @@ class LoginController(BaseController):
         super().__init__()
         self.MAX_ATTEMPTS = 3
         self.current_attempt = 0
-        self.usernamepasswordlist = ["sinan.onogur:Demo1234",
-                                     "annika.reinke:Test1234",
-                                     "janek.groehl:MySecurePassword123"]
+        self.usernamepasswordlist = ["tferge74:JBoSqCPs5uwA",
+                                     "hmcnel84:1m4qtp13",
+                                     "rbaume73:hL1GYXTvsD5g",
+                                     "hweyh73:s71PoIw5hBBF"]
 
     def print_initial_statement(self, app):
         super().print_initial_statement(app)
