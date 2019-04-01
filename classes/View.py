@@ -119,5 +119,8 @@ class App(tk.Frame):
         self.parent.attributes("-fullscreen", True)
         self.parent.wm_attributes("-topmost", 1)
 
+    def show_end_screen(self):
+        exit()
+
     def exit(self, event="none"):
         exit()
