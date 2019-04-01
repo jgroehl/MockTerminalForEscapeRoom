@@ -2,6 +2,7 @@ class BaseController(object):
     def __init__(self, user=None):
         self.CONTROLLER_PREFIX = "  > "
         self.CONTROLLER_COLOR = "#7494a1"
+        self.FAIL_COLOR = "#950C00"
         self.last_command = ""
         self.user = user
 

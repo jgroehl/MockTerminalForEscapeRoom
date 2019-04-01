@@ -23,15 +23,15 @@ class BuildController(BaseController):
 
         if text_args[0] == "bite":
             if len(text_args) > 1 and text_args[1] == "build":
-                if self.check_arguments(text_args):
+                if self.check_arguments(app, text_args):
                     app.show_end_screen()
                     return
                 else:
-                    app.add_label(text="Your use of the bite command did not achieve your goal :(",
+                    app.add_label(text="Your use of the bite command was not successful...",
                                   column=1,
                                   sticky="W",
                                   removable=True,
-                                  color=self.CONTROLLER_COLOR,
+                                  color=self.FAIL_COLOR,
                                   increment=True)
                     return
             else:
@@ -40,8 +40,104 @@ class BuildController(BaseController):
 
         super().parse_text(app)
 
-    def check_arguments(self, args):
-        return False
+    def check_arguments(self, app, args):
+        return_success = True
+
+        if len(args) != 7:
+            return_success = False
+
+        if "-label" in args:
+            app.add_label(text="Usage of -label not valid in this context.",
+                          column=1,
+                          sticky="W",
+                          removable=True,
+                          color=self.CONTROLLER_COLOR,
+                          increment=True)
+            return_success = False
+
+        if "-noCache" in args:
+            app.add_label(text="Not enough cache for the destined build artifact.",
+                          column=1,
+                          sticky="W",
+                          removable=True,
+                          color=self.CONTROLLER_COLOR,
+                          increment=True)
+            return_success = False
+
+        if "-quiet" in args:
+            app.add_label(text="Quiet mode not yet supported in BITE build process.",
+                          column=1,
+                          sticky="W",
+                          removable=True,
+                          color=self.CONTROLLER_COLOR,
+                          increment=True)
+            return_success = False
+
+        if "-releaseType" not in args:
+            app.add_label(text="Release type missing in bite build parameter list.",
+                          column=1,
+                          sticky="W",
+                          removable=True,
+                          color=self.CONTROLLER_COLOR,
+                          increment=True)
+            return_success = False
+        else:
+            index = args.index("-releaseType")
+            try:
+                if not args[index+1] == "084006":
+                    app.add_label(text="Invalid release type argument.",
+                                  column=1,
+                                  sticky="W",
+                                  removable=True,
+                                  color=self.CONTROLLER_COLOR,
+                                  increment=True)
+                    return_success = False
+            except:
+                app.add_label(text="No argument given for release type.",
+                              column=1,
+                              sticky="W",
+                              removable=True,
+                              color=self.CONTROLLER_COLOR,
+                              increment=True)
+                return_success = False
+
+        if "-buildPath" not in args:
+            app.add_label(text="Build path missing in bite build parameter list.",
+                          column=1,
+                          sticky="W",
+                          removable=True,
+                          color=self.CONTROLLER_COLOR,
+                          increment=True)
+            return_success = False
+        else:
+            index = args.index("-buildPath")
+            try:
+                if not args[index + 1] == "FoodStore/20300122/SuperCrumble":
+                    app.add_label(text="Invalid build path.",
+                                  column=1,
+                                  sticky="W",
+                                  removable=True,
+                                  color=self.CONTROLLER_COLOR,
+                                  increment=True)
+                    return_success = False
+            except:
+                app.add_label(text="No argument given for build path.",
+                              column=1,
+                              sticky="W",
+                              removable=True,
+                              color=self.CONTROLLER_COLOR,
+                              increment=True)
+                return_success = False
+
+        if "-skipTests" not in args:
+            app.add_label(text="Build not successful because of failed tests.",
+                          column=1,
+                          sticky="W",
+                          removable=True,
+                          color=self.CONTROLLER_COLOR,
+                          increment=True)
+            return_success = False
+        return return_success
 
     def print_bite_help(self, app):
         app.add_label(text="  bite command reference:",

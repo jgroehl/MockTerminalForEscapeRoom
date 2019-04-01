@@ -5,7 +5,7 @@ class UnlockController(BaseController):
 
     def __init__(self):
         super().__init__()
-        self.usernamepasswordlist = ["PUK"]
+        self.usernamepasswordlist = ["mSwxntmjxN3E0"]
 
     def print_initial_statement(self, app):
         super().print_initial_statement(app)
