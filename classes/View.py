@@ -3,6 +3,7 @@ from PIL import ImageTk, Image
 from classes.LoginController import LoginController
 from classes.BuildController import BuildController
 from classes.UnlokController import UnlockController
+from classes.VideoCapture import VideoCapture
 
 
 class App(tk.Frame):
@@ -10,8 +11,11 @@ class App(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.START_ROW_COUNT = 2
         self.MAX_ROWS = 25
+        self.delay = int(1000.0/24.0)
         self.FONT = ("Courier", 16)
         self.parent = parent
+        self.canvas = None
+        self.vid = VideoCapture()
         self.row_count = self.START_ROW_COUNT
         self.terminal = None
         self.entered_text = None
@@ -86,8 +90,6 @@ class App(tk.Frame):
         self.terminal.bind("<Return>", self.parse)
         self.terminal.bind("<Up>", self.restore_last_command)
         self.terminal.bind("<Down>", self.delete_command)
-        ##fixme delete this escape binding in the end!
-        self.terminal.bind("<Escape>", self.exit)
         self.terminal.focus()
 
     def parse(self, event="none"):
@@ -119,8 +121,41 @@ class App(tk.Frame):
         self.parent.attributes("-fullscreen", True)
         self.parent.wm_attributes("-topmost", 1)
 
-    def show_end_screen(self):
-        exit()
+    def update(self):
+        ret, frame = self.vid.get_frame()
+        if ret:
+            self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
+            self.canvas.create_image(0, 0, image=self.photo, anchor=tk.NW)
+        else:
+            self.vid.restart()
 
-    def exit(self, event="none"):
-        exit()
+        self.canvas.create_text(101, 301, fill="white", font="Consolas 28 bold", anchor="w",
+                                text="BITE build success!")
+        self.canvas.create_text(100, 300, fill="green", font="Consolas 28 bold", anchor="w",
+                                text="BITE build success!")
+        self.canvas.create_text(100, 360, fill="white", font="Consolas 24", anchor="w",
+                                text="SuperCrumble artifact successfully generated.")
+        self.canvas.create_text(101, 461, fill="white", font="Consolas 24 bold", anchor="w",
+                                text="Congratulations!")
+        self.canvas.create_text(100, 460, fill="green", font="Consolas 24 bold", anchor="w",
+                                text="Congratulations!")
+        self.canvas.create_text(100, 520, fill="white", font="Consolas 24", anchor="w",
+                                text="You have successfully completed the CAMI escape room!")
+
+        self.parent.after(self.delay, self.update)
+
+    def show_end_screen(self):
+        def all_children(window):
+            _list = window.winfo_children()
+            for item in _list:
+                if item.winfo_children():
+                    _list.extend(item.winfo_children())
+            return _list
+
+        widget_list = all_children(self.parent)
+        for item in widget_list:
+            item.pack_forget()
+
+        self.canvas = tk.Canvas(self.parent, width=self.vid.width, height=self.vid.height)
+        self.canvas.pack()
+        self.update()
