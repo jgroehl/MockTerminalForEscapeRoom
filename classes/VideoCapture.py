@@ -4,7 +4,7 @@ import cv2
 class VideoCapture:
 
     def __init__(self):
-        self.VIDEO = "resources/video.mp4"
+        self.VIDEO = "resources/video.mkv"
         self.vid = None
         self.width = None
         self.height = None

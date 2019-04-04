@@ -9,6 +9,8 @@ from classes.VideoCapture import VideoCapture
 class App(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent)
+        self.SCREEN_WIDTH = 1920
+        self.SCREEN_HEIGHT = 1080
         self.START_ROW_COUNT = 2
         self.MAX_ROWS = 25
         self.delay = int(1000.0/24.0)
@@ -22,7 +24,10 @@ class App(tk.Frame):
         self.cmd_label = None
         self.controller = LoginController()
         self.labels = []
+        self.photo = None
+        self.image = None
         self.initUI()
+        self.show_end_screen()
 
     def initUI(self):
 
@@ -124,23 +129,23 @@ class App(tk.Frame):
     def update(self):
         ret, frame = self.vid.get_frame()
         if ret:
-            self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
+            self.image = Image.fromarray(frame)
+            self.image = self.image.resize((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+            self.photo = ImageTk.PhotoImage(image=self.image)
             self.canvas.create_image(0, 0, image=self.photo, anchor=tk.NW)
         else:
             self.vid.restart()
 
-        self.canvas.create_text(101, 301, fill="white", font="Consolas 28 bold", anchor="w",
+        start_y = 840
+
+        self.canvas.create_text(201, start_y+1, fill="black", font="Consolas 28 bold", anchor="w",
                                 text="BITE build success!")
-        self.canvas.create_text(100, 300, fill="green", font="Consolas 28 bold", anchor="w",
+        self.canvas.create_text(200, start_y, fill="lightgreen", font="Consolas 28 bold", anchor="w",
                                 text="BITE build success!")
-        self.canvas.create_text(100, 360, fill="white", font="Consolas 24", anchor="w",
+        self.canvas.create_text(201, start_y + 61, fill="black", font="Consolas 24", anchor="w",
                                 text="SuperCrumble artifact successfully generated.")
-        self.canvas.create_text(101, 461, fill="white", font="Consolas 24 bold", anchor="w",
-                                text="Congratulations!")
-        self.canvas.create_text(100, 460, fill="green", font="Consolas 24 bold", anchor="w",
-                                text="Congratulations!")
-        self.canvas.create_text(100, 520, fill="white", font="Consolas 24", anchor="w",
-                                text="You have successfully completed the CAMI escape room!")
+        self.canvas.create_text(200, start_y+60, fill="white", font="Consolas 24", anchor="w",
+                                text="SuperCrumble artifact successfully generated.")
 
         self.parent.after(self.delay, self.update)
 
@@ -156,6 +161,8 @@ class App(tk.Frame):
         for item in widget_list:
             item.pack_forget()
 
-        self.canvas = tk.Canvas(self.parent, width=self.vid.width, height=self.vid.height)
+        self.canvas = tk.Canvas(self.parent, width=self.SCREEN_WIDTH, height=self.SCREEN_HEIGHT)
+        self.canvas.configure(background='black')
+        self.configure(background='black')
         self.canvas.pack()
         self.update()
